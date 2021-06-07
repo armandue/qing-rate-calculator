@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+}
+
+group 'org.qing'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok-maven
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
+    testImplementation group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'org.qing.rate.calculator.Application'
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
+}
